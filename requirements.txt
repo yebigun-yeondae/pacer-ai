@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pydantic>=2.0
+pydantic-settings
+scikit-learn
+pytest
+pytest-cov
+httpx

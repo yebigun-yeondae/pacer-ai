@@ -35,11 +35,6 @@ class RouteCandidate(BaseModel):
     crosswalks: list[CrosswalkInfo]
     total_distance: float
 
-    @field_validator("crosswalks")
-    @classmethod
-    def crosswalks_can_be_empty(cls, v: list[CrosswalkInfo]) -> list[CrosswalkInfo]:
-        return v
-
 
 class OptimizeRequest(BaseModel):
     user_id: str

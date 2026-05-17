@@ -35,7 +35,7 @@ def calculate_updated_profile(request: ProfileUpdateRequest) -> ProfileUpdateRes
         )
 
     new_avg = (1 - ALPHA) * profile.avg_speed + ALPHA * actual_speed
-    new_std = math.sqrt((1 - ALPHA) * profile.speed_std**2 + ALPHA * (actual_speed - new_avg)**2)
+    new_std = math.sqrt((1 - ALPHA) * profile.speed_std**2 + ALPHA * (actual_speed - profile.avg_speed)**2)
 
     return ProfileUpdateResponse(
         updated=True,

@@ -65,8 +65,7 @@ def test_ema_speed_std_updated():
     old_avg, old_std, actual = 1.4, 0.2, 1.6
     req = make_request(avg_speed=old_avg, speed_std=old_std, trip_count=5, actual_avg_speed=actual)
     res = calculate_updated_profile(req)
-    new_avg = 0.8 * old_avg + 0.2 * actual
-    expected_std = math.sqrt(0.8 * old_std**2 + 0.2 * (actual - new_avg)**2)
+    expected_std = math.sqrt(0.8 * old_std**2 + 0.2 * (actual - old_avg)**2)
     assert res.updated_profile.speed_std == pytest.approx(expected_std, abs=1e-6)
 
 

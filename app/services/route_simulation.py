@@ -14,6 +14,7 @@ from app.models.schemas import (
     SimulationDetail,
     UserProfile,
 )
+from app.services.speed_predictor import predict_route_speed
 
 SIGNAL_FALLBACK_WAIT_SECONDS = 30.0
 
@@ -123,7 +124,8 @@ def find_optimal_route(request: OptimizeRequest) -> OptimizeResponse:
     all_warnings: list[RouteWarning] = []
 
     for route in request.route_candidates:
-        detail, warnings = simulate_route(route, avg_speed)
+        corrected_speed = predict_route_speed(avg_speed, route.waypoints)
+        detail, warnings = simulate_route(route, corrected_speed)
         all_details.append(detail)
         all_warnings.extend(warnings)
 

@@ -25,7 +25,8 @@ class Waypoint(BaseModel):
 
 class CrosswalkInfo(BaseModel):
     crosswalk_id: str
-    distance_from_start: float  # 카카오맵 경로 geometry 기반 경로 상 누적 거리(m)
+    intersection_id: int | None = None  # C-ITS 조회용 교차로 itst_id. 신호 없으면 None 허용
+    distance_from_start: float  # Valhalla 경로 geometry 기반 경로 상 누적 거리(m)
     signal: SignalInfo | None = None  # None이면 신호 데이터 없음 → 30초 fallback
 
 

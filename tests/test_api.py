@@ -18,6 +18,7 @@ OPTIMIZE_PAYLOAD = {
             "crosswalks": [
                 {
                     "crosswalk_id": "cw-1",
+                    "intersection_id": 101,
                     "distance_from_start": 150.0,
                     "signal": {"phase": "green", "remaining_seconds": 20, "cycle_seconds": 60},
                 }
@@ -40,6 +41,41 @@ def test_optimize_route_ok():
     data = res.json()
     assert "optimal_route_id" in data
     assert data["optimal_route_id"] == "route-a"
+    assert data["simulation_details"][0]["crosswalk_results"][0]["crosswalk_id"] == "cw-1"
+
+
+def test_optimize_route_accepts_spring_crosswalk_payload():
+    payload = {
+        **OPTIMIZE_PAYLOAD,
+        "route_candidates": [
+            {
+                **OPTIMIZE_PAYLOAD["route_candidates"][0],
+                "crosswalks": [
+                    {
+                        "crosswalk_id": "9001",
+                        "intersection_id": 101,
+                        "distance_from_start": 120.0,
+                        "signal": {"phase": "green", "remaining_seconds": 60, "cycle_seconds": 90},
+                    },
+                    {
+                        "crosswalk_id": "9002",
+                        "intersection_id": None,
+                        "distance_from_start": 240.0,
+                        "signal": None,
+                    },
+                ],
+            }
+        ],
+    }
+
+    res = client.post("/api/v1/route/optimize", json=payload)
+
+    assert res.status_code == 200
+    data = res.json()
+    results = data["simulation_details"][0]["crosswalk_results"]
+    assert [r["crosswalk_id"] for r in results] == ["9001", "9002"]
+    assert results[0]["has_cits_data"] is True
+    assert results[1]["has_cits_data"] is False
 
 
 def test_optimize_route_empty_candidates():

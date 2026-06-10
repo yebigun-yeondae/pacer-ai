@@ -3,8 +3,6 @@ version: "3.9"
 services:
   fastapi:
     image: ${REGISTRY}/${ECR_REPOSITORY}:latest
-    ports:
-      - "8000:8000"
     networks:
       - pacer-network
 
